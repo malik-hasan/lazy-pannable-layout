@@ -1,0 +1,14 @@
+[versions]
+agp = "8.11.1"
+kotlin = "2.2.0"
+compose = "2025.07.00"
+
+[libraries]
+compose-bom = { module = "androidx.compose:compose-bom", version.ref = "compose" }
+compose-ui = { module = "androidx.compose.ui:ui" }
+compose-material3 = { module = "androidx.compose.material3:material3" }
+
+[plugins]
+android-library = { id = "com.android.library", version.ref = "agp" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
