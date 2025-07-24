@@ -7,7 +7,7 @@ interface LazyPannableLayoutScope {
 //    fun item(x: Int, y: Int, itemContent: @Composable () -> Unit)
 }
 
-class LazyPannableLayoutLayerContent(
+internal class LazyPannableLayoutLayerContent(
     buildContent: LazyPannableLayoutScope.() -> Unit
 ): LazyPannableLayoutScope {
 
@@ -29,6 +29,6 @@ class LazyPannableLayoutLayerContent(
     init { buildContent() }
 }
 
-typealias LazyPannableLayoutItemContent<T> = @Composable (T) -> Unit
+internal typealias LazyPannableLayoutItemContent<T> = @Composable (T) -> Unit
 
-typealias LazyPannableLayoutLayer = @Composable (state: LazyPannableLayoutState) -> Unit
+internal typealias LazyPannableLayoutLayer = @Composable (state: LazyPannableLayoutState) -> Unit

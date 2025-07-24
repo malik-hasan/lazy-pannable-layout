@@ -1,6 +1,6 @@
 package oats.mobile.lazypannablelayout
 
-data class ViewBoundaries(
+internal data class ViewBoundaries(
     val fromX: Int,
     val toX: Int,
     val fromY: Int,
