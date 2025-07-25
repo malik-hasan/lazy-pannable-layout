@@ -19,15 +19,18 @@ class LazyPannableLayoutState {
         offset = IntOffset(x, y)
     }
 
-    fun getBoundaries(
+    internal fun getVisibleCoordinates(
         constraints: Constraints,
         threshold: Int = 500 // threshold before it disappears
-    ): ViewBoundaries {
-        return ViewBoundaries(
-            fromX = offset.x - threshold,
-            toX = constraints.maxWidth + offset.x + threshold,
-            fromY = offset.y - threshold,
-            toY = constraints.maxHeight + offset.y + threshold
+    ): VisibleCoordinates {
+        val startX = offset.x - threshold,
+        val endX = constraints.maxWidth + offset.x + threshold,
+        val startY = offset.y - threshold,
+        val endY = constraints.maxHeight + offset.y + threshold
+
+        return VisibleCoordinates(
+            xRange = startX..endX,
+            yRange = startY..endY
         )
     }
 }

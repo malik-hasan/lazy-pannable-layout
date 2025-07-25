@@ -4,25 +4,27 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.lazy.layout.LazyLayout
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Constraints
+import androidx.compose.ui.unit.Density
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun <T : Positionable> LazyPannableLayoutLayer(
     state: LazyPannableLayoutState,
     items: List<T>,
-    itemContent: LazyPannableLayoutItemContent<T>
+    itemContent: LazyPannableLayoutItemContent<T>,
+    density: Density = LocalDensity.current
 ) {
     val itemProvider = remember(items, itemContent) {
         LazyPannableLayoutItemProvider(items, itemContent)
     }
 
     LazyLayout({ itemProvider }) { constraints ->
-        val boundaries = state.getBoundaries(constraints)
+        val visibleCoordinates = state.getVisibleCoordinates(constraints)
         val indexes = items.mapIndexedNotNull { index, item ->
             index.takeIf {
-                item.x in boundaries.fromX..boundaries.toX &&
-                    item.y in boundaries.fromY..boundaries.toY
+                item.isVisible(density, visibleCoordinates)
             }
         }
 

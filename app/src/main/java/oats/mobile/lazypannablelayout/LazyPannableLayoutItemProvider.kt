@@ -15,8 +15,8 @@ internal class LazyPannableLayoutItemProvider<T : Positionable>(
 
     @Composable
     override fun Item(index: Int, key: Any) {
-        items.getOrNull(index)?.let { item ->
-            itemContent(item)
+        items.getOrNull(index)?.let {
+            itemContent(it)
         }
     }
 }
