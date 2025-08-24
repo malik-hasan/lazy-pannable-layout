@@ -23,9 +23,9 @@ class LazyPannableLayoutState {
         constraints: Constraints,
         threshold: Int = 500 // threshold before it disappears
     ): VisibleCoordinates {
-        val startX = offset.x - threshold,
-        val endX = constraints.maxWidth + offset.x + threshold,
-        val startY = offset.y - threshold,
+        val startX = offset.x - threshold
+        val endX = constraints.maxWidth + offset.x + threshold
+        val startY = offset.y - threshold
         val endY = constraints.maxHeight + offset.y + threshold
 
         return VisibleCoordinates(

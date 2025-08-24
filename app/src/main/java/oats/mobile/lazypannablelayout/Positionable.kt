@@ -8,20 +8,20 @@ abstract class Positionable {
 
     abstract val x: Int
     abstract val y: Int
-    abstract val width: Dp
-    abstract val height: Dp
+    abstract val maxWidth: Dp
+    abstract val maxHeight: Dp
 
-    fun getWidthPx(density: Density) = with(density) {
-        width.toPx().roundToInt()
+    fun getMaxWidthPx(density: Density) = with(density) {
+        maxWidth.toPx().roundToInt()
     }
 
-    fun getHeightPx(density: Density) = with(density) {
-        height.toPx().roundToInt()
+    fun getMaxHeightPx(density: Density) = with(density) {
+        maxHeight.toPx().roundToInt()
     }
 
-    fun getEndX(density: Density) = x + getWidthPx(density)
+    fun getEndX(density: Density) = x + getMaxWidthPx(density)
 
-    fun getEndY(density: Density) = y + getHeightPx(density)
+    fun getEndY(density: Density) = y + getMaxHeightPx(density)
 
     internal fun isVisible(density: Density, visibleCoordinates: VisibleCoordinates) =
         with(visibleCoordinates) {
