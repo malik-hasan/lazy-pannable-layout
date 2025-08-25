@@ -5,18 +5,17 @@ import androidx.compose.foundation.lazy.layout.LazyLayoutItemProvider
 import androidx.compose.runtime.Composable
 
 @OptIn(ExperimentalFoundationApi::class)
-internal class LazyPannableLayoutItemProvider<T : Positionable>(
-    private val items: List<T>,
-    private val itemContent: LazyPannableLayoutItemContent<T>
+internal class LazyPannableLayoutItemProvider(
+    private val content: LazyPannableLayoutLayerContent
 ) : LazyLayoutItemProvider {
 
     override val itemCount
-        get() = items.size
+        get() = content.itemCount
 
     @Composable
     override fun Item(index: Int, key: Any) {
-        items.getOrNull(index)?.let {
-            itemContent(it)
+        content.withInterval(index) { localIndex, layer ->
+            layer.item(localIndex)
         }
     }
 }

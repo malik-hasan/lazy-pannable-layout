@@ -1,27 +1,33 @@
 package oats.mobile.lazypannablelayout
 
+import androidx.compose.foundation.lazy.layout.IntervalList
+import androidx.compose.foundation.lazy.layout.LazyLayoutIntervalContent
+import androidx.compose.foundation.lazy.layout.MutableIntervalList
 import androidx.compose.runtime.Composable
 
 interface LazyPannableLayoutScope {
-    fun <T : Positionable> items(items: List<T>, itemContent: LazyPannableLayoutItemContent<T>)
+    fun items(items: List<Positionable>, itemContent: LazyPannableLayoutItemContent)
 }
 
 internal class LazyPannableLayoutLayerContent(
     buildContent: LazyPannableLayoutScope.() -> Unit
-): LazyPannableLayoutScope {
+): LazyLayoutIntervalContent<LazyPannableLayoutLayer>, LazyPannableLayoutScope {
 
-    private val _layers = mutableListOf<LazyPannableLayoutLayer>()
-    val layers: List<LazyPannableLayoutLayer> = _layers
+    private val _layers = MutableIntervalList<LazyPannableLayoutLayer>()
+    val layers: IntervalList<LazyPannableLayoutLayer> = _layers
 
-    override fun <T : Positionable> items(items: List<T>, itemContent: LazyPannableLayoutItemContent<T>) {
-        _layers += @Composable { state ->
-            LazyPannableLayoutLayer(state, items, itemContent)
-        }
+    override fun items(items: List<Positionable>, itemContent: LazyPannableLayoutItemContent) {
+        _layers.addInterval(
+            items.size,
+            LazyPannableLayoutLayer(itemContent)
+        )
     }
 
     init { buildContent() }
 }
 
-internal typealias LazyPannableLayoutItemContent<T> = @Composable (T) -> Unit
+internal typealias LazyPannableLayoutItemContent = @Composable (Int) -> Unit
 
-internal typealias LazyPannableLayoutLayer = @Composable (state: LazyPannableLayoutState) -> Unit
+internal data class LazyPannableLayoutLayer(
+    val item: LazyPannableLayoutItemContent
+): LazyLayoutIntervalContent.Interval
