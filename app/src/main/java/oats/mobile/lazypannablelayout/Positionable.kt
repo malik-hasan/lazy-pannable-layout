@@ -1,33 +1,20 @@
 package oats.mobile.lazypannablelayout
 
-import androidx.compose.ui.unit.Density
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntRect
-import kotlin.math.roundToInt
 
+/**
+ * A Positionable item in a LazyPannableLayout
+ *
+ * Only use this when the size of the Composable has no bounds
+ * The LazyPannableLayout is smart enough to skip it if it is beyond the right or bottom bounds of the viewport
+ * But it will have to measure this Composable on every pass to decide if it is beyond the left or top bounds of the viewport
+ * **Always** use BoundedPositionable instead when possible for full optimization
+ */
 abstract class Positionable {
     abstract val x: Int
     abstract val y: Int
-}
 
-abstract class FixedSizePositionable : Positionable() {
-    abstract val maxWidth: Dp
-    abstract val maxHeight: Dp
-
-    fun getMaxWidthPx(density: Density) = with(density) {
-        maxWidth.toPx().roundToInt()
-    }
-
-    fun getMaxHeightPx(density: Density) = with(density) {
-        maxHeight.toPx().roundToInt()
-    }
-
-    fun getEndX(density: Density) = x + getMaxWidthPx(density)
-
-    fun getEndY(density: Density) = y + getMaxHeightPx(density)
-
-    internal fun isVisible(density: Density, viewport: IntRect) = with(viewport) {
-        (x < right && getEndX(density) > left)
-            && (y < bottom && getEndY(density) > top)
+    internal open fun isVisible(density: Float, viewport: IntRect) = with(viewport) {
+        x < right && y < bottom
     }
 }

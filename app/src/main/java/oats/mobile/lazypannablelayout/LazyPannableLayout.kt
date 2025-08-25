@@ -2,15 +2,12 @@ package oats.mobile.lazypannablelayout
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.gestures.detectDragGestures
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.lazy.layout.LazyLayout
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.round
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -42,20 +39,27 @@ fun LazyPannableLayout(
             }
     ) { constraints ->
         val viewport = state.getViewport(constraints)
-        val indexes = content.layers.mapIndexedNotNull { index, item ->
-            index.takeIf {
-                item.isVisible(density, viewport)
+        val indexes = mutableListOf<Int>()
+        content.layers.forEach { layer ->
+            indexes += layer.value.items.mapIndexedNotNull { index, positionable ->
+                index.takeIf { positionable.isVisible(density, viewport) }
             }
         }
 
         layout(constraints.maxWidth, constraints.maxHeight) {
             indexes.forEach { index ->
-                val item = items[index]
+                val item = content.withInterval(index) { localIndex, layer ->
+                    layer.items[localIndex]
+                }
+
                 val x = item.x - state.offset.x
                 val y = item.y - state.offset.y
 
-                measure(index, constraints).forEach {
-                    it.placeRelative(x, y)
+                compose(index).forEach { measurable ->
+                    val placeable = measurable.measure(constraints)
+                    if (item is BoundedPositionable || (x + placeable.width > viewport.left && y + placeable.height > viewport.top)) {
+                        placeable.placeRelative(x, y)
+                    }
                 }
             }
         }

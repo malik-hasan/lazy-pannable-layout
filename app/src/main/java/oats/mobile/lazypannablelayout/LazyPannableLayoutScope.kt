@@ -6,7 +6,7 @@ import androidx.compose.foundation.lazy.layout.MutableIntervalList
 import androidx.compose.runtime.Composable
 
 interface LazyPannableLayoutScope {
-    fun items(items: List<Positionable>, itemContent: LazyPannableLayoutItemContent)
+    fun items(items: List<Positionable>, itemContent: @Composable (Int) -> Unit)
 }
 
 internal class LazyPannableLayoutLayerContent(
@@ -16,18 +16,12 @@ internal class LazyPannableLayoutLayerContent(
     private val _layers = MutableIntervalList<LazyPannableLayoutLayer>()
     val layers: IntervalList<LazyPannableLayoutLayer> = _layers
 
-    override fun items(items: List<Positionable>, itemContent: LazyPannableLayoutItemContent) {
+    override fun items(items: List<Positionable>, itemContent: @Composable (Int) -> Unit) {
         _layers.addInterval(
             items.size,
-            LazyPannableLayoutLayer(itemContent)
+            LazyPannableLayoutLayer(items, itemContent)
         )
     }
 
     init { buildContent() }
 }
-
-internal typealias LazyPannableLayoutItemContent = @Composable (Int) -> Unit
-
-internal data class LazyPannableLayoutLayer(
-    val item: LazyPannableLayoutItemContent
-): LazyLayoutIntervalContent.Interval

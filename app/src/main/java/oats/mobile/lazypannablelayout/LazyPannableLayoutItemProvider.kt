@@ -15,7 +15,7 @@ internal class LazyPannableLayoutItemProvider(
     @Composable
     override fun Item(index: Int, key: Any) {
         content.withInterval(index) { localIndex, layer ->
-            layer.item(localIndex)
+            layer.itemContent(localIndex)
         }
     }
 }
