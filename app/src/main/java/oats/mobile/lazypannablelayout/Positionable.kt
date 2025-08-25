@@ -2,6 +2,7 @@ package oats.mobile.lazypannablelayout
 
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntRect
 import kotlin.math.roundToInt
 
 abstract class Positionable {
@@ -23,9 +24,10 @@ abstract class Positionable {
 
     fun getEndY(density: Density) = y + getMaxHeightPx(density)
 
-    internal fun isVisible(density: Density, visibleCoordinates: VisibleCoordinates) =
-        with(visibleCoordinates) {
-            (x in xRange || getEndX(density) in xRange)
-                && (y in yRange || getEndY(density) in yRange)
-        }
+    internal fun isVisible(density: Density, viewport: IntRect) = with(viewport) {
+        (x > left || getEndX(density) > left)
+            && (x < right || getEndX(density) < right)
+            && (y > top || getEndY(density) > top)
+            && (y < bottom || getEndY(density) < bottom)
+    }
 }

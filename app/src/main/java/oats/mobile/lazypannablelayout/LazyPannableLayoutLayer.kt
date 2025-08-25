@@ -5,7 +5,6 @@ import androidx.compose.foundation.lazy.layout.LazyLayout
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Density
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -21,10 +20,10 @@ internal fun <T : Positionable> LazyPannableLayoutLayer(
     }
 
     LazyLayout({ itemProvider }) { constraints ->
-        val visibleCoordinates = state.getVisibleCoordinates(constraints)
+        val viewport = state.getViewport(constraints)
         val indexes = items.mapIndexedNotNull { index, item ->
             index.takeIf {
-                item.isVisible(density, visibleCoordinates)
+                item.isVisible(density, viewport)
             }
         }
 
@@ -34,7 +33,7 @@ internal fun <T : Positionable> LazyPannableLayoutLayer(
                 val x = item.x - state.offset.x
                 val y = item.y - state.offset.y
 
-                measure(index, Constraints()).forEach {
+                measure(index, constraints).forEach {
                     it.placeRelative(x, y)
                 }
             }
