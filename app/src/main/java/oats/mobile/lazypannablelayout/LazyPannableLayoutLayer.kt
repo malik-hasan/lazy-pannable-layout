@@ -5,5 +5,5 @@ import androidx.compose.runtime.Composable
 
 internal data class LazyPannableLayoutLayer(
     val items: List<Positionable>,
-    val itemContent: @Composable (Int) -> Unit
+    val content: @Composable (Int) -> Unit
 ) : LazyLayoutIntervalContent.Interval
