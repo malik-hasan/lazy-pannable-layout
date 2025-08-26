@@ -7,7 +7,7 @@ import androidx.compose.ui.unit.IntRect
  * A Positionable item in a LazyPannableLayout
  *
  * **Always** provide maxWidth and maxHeight if possible for full lazy optimization.
- * The LazyPannableLayout is will always skip composition if it is beyond the right or bottom bounds of the viewport,
+ * The LazyPannableLayout will always skip composition if it is beyond the right or bottom bounds of the viewport,
  * but if `maxWidth` or `maxHeight` are not provided, it will have to re-measure this Composable on every pass
  * to decide if it is beyond the left or top bounds of the viewport respectively.
  *
