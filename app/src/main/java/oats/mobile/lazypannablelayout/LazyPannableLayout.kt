@@ -39,25 +39,26 @@ fun LazyPannableLayout(
             }
     ) { constraints ->
         val viewport = state.getViewport(constraints)
-        val indexes = mutableListOf<Int>()
+
+        val indexedVisibleItems = mutableListOf<IndexedValue<Positionable>>()
         content.layers.forEach { layer ->
-            indexes += layer.value.items.mapIndexedNotNull { index, positionable ->
-                index.takeIf { positionable.isVisible(density, viewport) }
+            val startIndex = layer.startIndex
+            layer.value.items.forEachIndexed { localIndex, positionable ->
+                if (positionable.isVisible(density, viewport)) {
+                    indexedVisibleItems += IndexedValue(startIndex + localIndex, positionable)
+                }
             }
         }
 
         layout(constraints.maxWidth, constraints.maxHeight) {
-            indexes.forEach { index ->
-                val item = content.withInterval(index) { localIndex, layer ->
-                    layer.items[localIndex]
-                }
-
+            indexedVisibleItems.forEach { (index, item) ->
                 val x = item.x - state.offset.x
                 val y = item.y - state.offset.y
 
                 compose(index).forEach { measurable ->
                     val placeable = measurable.measure(constraints)
-                    if (item is BoundedPositionable || (x + placeable.width > viewport.left && y + placeable.height > viewport.top)) {
+                    // only check the left and top again after measurement
+                    if (x + placeable.width > viewport.left && y + placeable.height > viewport.top) {
                         placeable.placeRelative(x, y)
                     }
                 }
