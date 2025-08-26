@@ -23,7 +23,10 @@ class LazyPannableLayoutState {
 
     internal fun getViewport(constraints: Constraints) =
         IntRect(
-            offset,
-            IntSize(constraints.maxWidth, constraints.maxHeight)
+            offset = offset,
+            size = IntSize(
+                width = constraints.maxWidth,
+                height = constraints.maxHeight
+            )
         )
 }
