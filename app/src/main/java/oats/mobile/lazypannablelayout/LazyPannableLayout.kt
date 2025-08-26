@@ -8,6 +8,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.unit.IntRect
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.round
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -38,7 +40,13 @@ fun LazyPannableLayout(
                 }
             }
     ) { constraints ->
-        val viewport = state.getViewport(constraints)
+        val viewport = IntRect(
+            offset = state.offset,
+            size = IntSize(
+                width = constraints.maxWidth,
+                height = constraints.maxHeight
+            )
+        )
 
         val indexedVisibleItems = mutableListOf<IndexedValue<Positionable>>()
         content.layers.forEach { layer ->
