@@ -15,6 +15,7 @@ kotlin {
 android {
     namespace = "oats.mobile.lazypannablelayout"
     compileSdk = 36
+    testOptions.targetSdk = 36
 
     defaultConfig {
         minSdk = 24
