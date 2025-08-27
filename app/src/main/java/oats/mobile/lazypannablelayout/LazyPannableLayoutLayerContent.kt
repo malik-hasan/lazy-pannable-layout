@@ -13,16 +13,18 @@ internal class LazyPannableLayoutLayerContent(
     val _layers = MutableIntervalList<LazyPannableLayoutLayer>()
     override val intervals = _layers
 
-    override fun item(x: Int, y: Int, maxWidth: Dp?, maxHeight: Dp?, content: @Composable () -> Unit) =
-        item(
-            item = object : Positionable() {
-                override val x = x
-                override val y = y
-                override val maxWidth = maxWidth
-                override val maxHeight = maxHeight
-            },
-            content = content
-        )
+    override fun item(x: Int, y: Int, maxWidth: Dp?, maxHeight: Dp?, content: @Composable () -> Unit) {
+        val positionable = object : Positionable() {
+            override val x = x
+            override val y = y
+            override val maxWidth = maxWidth
+            override val maxHeight = maxHeight
+        }
+
+        item(positionable) {
+            content(positionable)
+        }
+    }
 
     override fun <T : Positionable> item(item: T, content: @Composable (T) -> Unit) {
         _layers.addInterval(
