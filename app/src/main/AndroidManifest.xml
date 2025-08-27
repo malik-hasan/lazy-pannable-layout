@@ -12,9 +12,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LazyPannableLayout">
         <activity
-            android:name=".MainActivity"
+            android:name="androidx.activity.ComponentActivity"
             android:exported="true"
-            android:label="@string/app_name"
             android:theme="@style/Theme.LazyPannableLayout">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
