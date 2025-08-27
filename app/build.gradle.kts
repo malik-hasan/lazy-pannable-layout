@@ -16,7 +16,10 @@ android {
     namespace = "oats.mobile.lazypannablelayout"
     compileSdk = 36
 
-    defaultConfig.minSdk = 24
+    defaultConfig {
+        minSdk = 24
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
 
     buildTypes {
         release {
@@ -40,4 +43,6 @@ dependencies {
     implementation(platform(libs.compose.bom))
     implementation(libs.compose.ui)
     implementation(libs.compose.material3)
+
+    androidTestImplementation(libs.compose.ui.test.junit4)
 }

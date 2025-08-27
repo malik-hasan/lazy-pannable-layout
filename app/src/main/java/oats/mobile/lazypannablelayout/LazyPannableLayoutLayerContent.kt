@@ -8,14 +8,14 @@ import androidx.compose.ui.unit.Dp
 
 internal class LazyPannableLayoutLayerContent(
     buildContent: LazyPannableLayoutScope.() -> Unit
-): LazyLayoutIntervalContent<LazyPannableLayoutLayer>, LazyPannableLayoutScope {
+): LazyLayoutIntervalContent<LazyPannableLayoutLayer>(), LazyPannableLayoutScope {
 
-    private val _layers = MutableIntervalList<LazyPannableLayoutLayer>()
-    val layers: IntervalList<LazyPannableLayoutLayer> = _layers
+    val _layers = MutableIntervalList<LazyPannableLayoutLayer>()
+    override val intervals = _layers
 
     override fun item(x: Int, y: Int, maxWidth: Dp?, maxHeight: Dp?, content: @Composable () -> Unit) =
         item(
-            item = object : Positionable {
+            item = object : Positionable() {
                 override val x = x
                 override val y = y
                 override val maxWidth = maxWidth
@@ -24,24 +24,23 @@ internal class LazyPannableLayoutLayerContent(
             content = content
         )
 
-    override fun item(item: Positionable, content: @Composable () -> Unit) {
+    override fun <T : Positionable> item(item: T, content: @Composable (T) -> Unit) {
         _layers.addInterval(
-            1,
-            LazyPannableLayoutLayer(listOf(item)) {
-                content()
+            size = 1,
+            value = LazyPannableLayoutLayer(listOf(item)) {
+                content(item)
             }
         )
     }
 
-    override fun items(items: List<Positionable>, content: @Composable (Int) -> Unit) {
+    override fun <T : Positionable> items(items: List<T>, content: @Composable (Int, T) -> Unit) {
         _layers.addInterval(
-            items.size,
-            LazyPannableLayoutLayer(items, content)
+            size = items.size,
+            value = LazyPannableLayoutLayer(items) { i ->
+                content(i, items[i])
+            }
         )
     }
-
-    override fun <T : Positionable> items(items: List<T>, content: @Composable (T) -> Unit) =
-        items(items) { content(items[it]) }
 
     init { buildContent() }
 }

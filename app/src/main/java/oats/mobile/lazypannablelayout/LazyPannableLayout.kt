@@ -49,7 +49,7 @@ fun LazyPannableLayout(
         )
 
         val indexedVisibleItems = mutableListOf<IndexedValue<Positionable>>()
-        content.layers.forEach { layer ->
+        content.intervals.forEach { layer ->
             val startIndex = layer.startIndex
             layer.value.items.forEachIndexed { localIndex, positionable ->
                 if (positionable.isVisible(density, viewport)) {
